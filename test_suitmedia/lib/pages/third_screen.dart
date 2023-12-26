@@ -16,8 +16,10 @@ class User {
 }
 
 class ThirdScreen extends StatefulWidget {
+  const ThirdScreen({super.key});
+
   @override
-  _ThirdScreenState createState() => _ThirdScreenState();
+  State<ThirdScreen> createState() => _ThirdScreenState();
 }
 
 class _ThirdScreenState extends State<ThirdScreen> {
@@ -58,6 +60,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
         });
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching data: $e');
     }
 
@@ -73,13 +76,20 @@ class _ThirdScreenState extends State<ThirdScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(4.0),
+          child: Container(
+            color: const Color(0xffE2E3E4),
+            height: 1.0,
+          ),
+        ),
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(
+          child: const Icon(
             Icons.chevron_left,
-            color: Colors.grey,
+            color: Color(0xff554AF0),
           ),
         ),
         title: Text(
@@ -96,32 +106,38 @@ class _ThirdScreenState extends State<ThirdScreen> {
           return fetchData();
         },
         child: ListView.builder(
+          padding: const EdgeInsets.all(16.0),
           itemCount: users.length + 1,
           itemBuilder: (context, index) {
             if (index == users.length) {
               if (isLoading) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else {
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               }
             }
 
             final user = users[index];
-            return Card(
-              child: ListTile(
-                onTap: () {
-                  Navigator.pop(context,
-                      user.username); // Kirim username kembali ke SecondScreen
-                },
-                leading: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(user.urlAvatar),
+            return Column(
+              children: [
+                ListTile(
+                  onTap: () {
+                    Navigator.pop(
+                      context,
+                      user.username,
+                    ); // Kirim username kembali ke SecondScreen
+                  },
+                  leading: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(user.urlAvatar),
+                  ),
+                  title: Text(user.username),
+                  subtitle: Text(user.email),
                 ),
-                title: Text(user.username),
-                subtitle: Text(user.email),
-              ),
+                Divider()
+              ],
             );
           },
         ),

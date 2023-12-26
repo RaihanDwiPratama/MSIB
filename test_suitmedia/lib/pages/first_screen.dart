@@ -1,52 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:test_suitmedia/pages/styles.dart';
-import 'package:test_suitmedia/pages/secondScreen.dart';
+import 'package:test_suitmedia/utils/styles.dart';
+import 'package:test_suitmedia/pages/second_screen.dart';
 
-class FirstScreen extends StatelessWidget {
+class FirstScreen extends StatefulWidget {
+  const FirstScreen({Key? key}) : super(key: key);
+
+  @override
+  State<FirstScreen> createState() => _FirstScreenState();
+}
+
+class _FirstScreenState extends State<FirstScreen> {
   final _nameController = TextEditingController();
-  final _polindromeController = TextEditingController();
+  final _palindromeController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _palindromeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 205, horizontal: 30),
+          padding: const EdgeInsets.symmetric(
+            vertical: 205,
+            horizontal: 30,
+          ),
           decoration: Styles.background,
           child: Column(
             children: [
               Container(
                 width: 100,
                 height: 100,
-                child: Icon(
+                decoration: Styles.addPerson,
+                child: const Icon(
                   Icons.person_add,
                   color: Colors.white,
                   size: 30,
                 ),
-                decoration: Styles.addPerson,
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               TextField(
                 controller: _nameController,
                 decoration: Styles.inputName,
                 style: Styles.textInput,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
-                controller: _polindromeController,
+                controller: _palindromeController,
                 decoration: Styles.inputPolindrome,
                 style: Styles.textInput,
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               Row(
                 children: [
                   Expanded(
                     child: ElevatedButton(
                       style: Styles.containerBtn,
                       onPressed: () {
-                        String input = _polindromeController.text.toLowerCase();
-                        String processedInput = input.replaceAll(
-                            ' ', ''); // Menghapus spasi dari input
+                        String input = _palindromeController.text.toLowerCase();
+
+                        if (input.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please enter a word.'),
+                            ),
+                          );
+                          return;
+                        }
+
+                        String processedInput = input.replaceAll(' ', '');
                         String reversedInput = String.fromCharCodes(
                             processedInput.runes.toList().reversed);
                         bool isPalindrome = processedInput == reversedInput;
@@ -55,7 +81,7 @@ class FirstScreen extends StatelessWidget {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              title: Text('Palindrome Checker'),
+                              title: const Text('Palindrome Checker'),
                               content: Text(
                                 isPalindrome
                                     ? 'Input is a palindrome.'
@@ -66,19 +92,19 @@ class FirstScreen extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                 ),
                               ],
                             );
                           },
                         );
                       },
-                      child: Text('Check'),
+                      child: const Text('Check'),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
@@ -93,7 +119,7 @@ class FirstScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      child: Text('Next'),
+                      child: const Text('Next'),
                     ),
                   ),
                 ],
